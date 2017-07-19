@@ -1,0 +1,33 @@
+version: '2'
+template:
+  name: 'template name'
+  description: 't description'
+  required:
+    - build
+toolchain:
+  name: '{{baseName}}-{{timestamp}}'
+services:
+  build:
+    service_id: pipeline
+    parameters:
+      name: '{{toolchain.name}}'
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: pipeline.yml
+        env:
+          BIND_TO: '{{bindTo}}'
+          CF_APP: '{{form.pipeline.parameters.app-name}}'
+          CF_SPACE: '{{form.pipeline.parameters.space}}'
+          CF_ORGANIZATION: '{{form.pipeline.parameters.organization}}'
+          CF_REGION_ID: '{{form.pipeline.parameters.region}}'
+        execute: true
+form:
+  pipeline:
+    parameters:
+      region: '{{region}}'
+      organization: '{{organization}}'
+      space: dev
+      app-name: '{{toolchain.name}}'
+    schema:
+$ref: deploy.json
